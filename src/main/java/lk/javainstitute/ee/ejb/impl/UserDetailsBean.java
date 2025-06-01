@@ -2,14 +2,20 @@ package lk.javainstitute.ee.ejb.impl;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import lk.javainstitute.ee.ejb.remote.AppSettings;
 import lk.javainstitute.ee.ejb.remote.UserDetails;
 
-@Stateless(name = "UserInfo",mappedName = "XYZ")
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+@Stateless(name = "UserInfo", mappedName = "XYZ")
 public class UserDetailsBean implements UserDetails {
 
-    int count;
 
+    //dependency injection
+    @EJB private AppSettings settings;
 
     @PostConstruct
     public void init() {
@@ -23,16 +29,10 @@ public class UserDetailsBean implements UserDetails {
 
     @Override
     public String getName() {
-        try{
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
 
-        count++;
-        return "Achintha"+count;
-    }
+     return settings.getAppName() +" "+settings.getAppVersion()+" "+settings.getAppDescription();
 
+   }
     @Override
     public String getEmail() {
         return "achintha@gmail.com";
